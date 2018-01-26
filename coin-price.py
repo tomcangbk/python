@@ -49,7 +49,7 @@ def get_bittrex():
 		sub_data2["last_price"] = data2["result"][0]["Last"]
 		sub_data2["volume"] 	= data2["result"][0]["Volume"]
 		sub_data2["change"] 	= get_bittrex_change(data2["result"][0]["PrevDay"], data2["result"][0]["Last"])
-		print(sub_data2)
+		# print(sub_data2)
 		bittrex["pair"][name]  = sub_data2
 
 	return bittrex
@@ -74,10 +74,10 @@ def get_binance():
 			      # Extract data
             sub_data2       = {}
             sub_data2["name"]       = item["symbol"]
-            sub_data2["last_price"] = item["lastPrice"]
-            sub_data2["volume"]     = item["volume"]
-            sub_data2["change"]     = item["priceChangePercent"]
-            print item["symbol"]
+            sub_data2["last_price"] = float(item["lastPrice"])
+            sub_data2["volume"]     = float(item["volume"])
+            sub_data2["change"]     = float(item["priceChangePercent"])
+            # print item["symbol"]
             binance["pair"][item["symbol"]] = sub_data2
         else:
             pass
