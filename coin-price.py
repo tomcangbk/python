@@ -71,8 +71,8 @@ def get_binance():
     for item in data:
         if "BTC" in item["symbol"]:
 		
-			      # Extract data
-            sub_data2       = {}
+	    # Extract data
+            sub_data2               = {}
             sub_data2["name"]       = item["symbol"]
             sub_data2["last_price"] = float(item["lastPrice"])
             sub_data2["volume"]     = float(item["volume"])
