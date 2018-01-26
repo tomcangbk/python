@@ -45,7 +45,7 @@ def get_bittrex():
 		sub_data2 = {}
 		
 		# Extract data from data2
-		sub_data2["name"] 		= name
+		sub_data2["name"] 	= name
 		sub_data2["last_price"] = data2["result"][0]["Last"]
 		sub_data2["volume"] 	= data2["result"][0]["Volume"]
 		sub_data2["change"] 	= get_bittrex_change(data2["result"][0]["PrevDay"], data2["result"][0]["Last"])
