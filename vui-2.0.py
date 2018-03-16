@@ -37,7 +37,7 @@ def get_time():
 # Get bittrex prices
 def get_bittrex():
 
-    write_log(get_now() + "-Start get bittrex data")
+    write_log(get_now() + " Start get bittrex data")
     # Get pair
     bittrex = {}
     bittrex["time"] = str(datetime.datetime.now()+ datetime.timedelta(hours=7))[:19]
@@ -69,12 +69,12 @@ def get_bittrex():
         sub_data2["volume"]     = data2["result"][0]["Volume"]
 
         bittrex["pair"][name]  = sub_data2
-    write_log(get_now() + "-Finish get bittrex data")
+    write_log(get_now() + " Finish get bittrex data")
     return bittrex
 
 # Get binance prices
 def get_binance():
-    write_log(get_now() + "-Start get binance data")
+    write_log(get_now() + " Start get binance data")
     binance         = {}
     binance["time"] = str(datetime.datetime.now()+ datetime.timedelta(hours=7))[:19]
     binance["pair"] = {}
@@ -97,7 +97,7 @@ def get_binance():
             binance["pair"][item["symbol"]] = sub_data2
         else:
             pass
-    write_log(get_now() + "-Finish get binance data")
+    write_log(get_now() + " Finish get binance data")
     return binance
 
 # Auth
@@ -111,24 +111,24 @@ def gs_auth(spreadsheet_name):
     while(1):
         try:
             gc = gspread.authorize(credentials)
-            write_log(get_now() + "Auth success")
+            write_log(get_now() + " Auth success")
             print("Auth success...")
             break
         except gspread.exceptions.AuthenticationError or gspread.exceptions.RequestError:
-            write_log(get_now() + str(e1))
+            write_log(get_now() + " " + str(e1))
             t+=1
             write_log(get_now() + "Try to auth: " + str(t))
             if t == 100:
-                print("Google Auth got problem, program exit...")
-                write_log(get_now() + "Google Auth got problem, program exit...")
+                # print("Google Auth got problem, program exit...")
+                write_log(get_now() + " Google Auth got problem, program exit...")
                 sys.exit()
     try:
         sh          = gc.open(spreadsheet_name)
         # print "Success open spreadsheet"
-        write_log(get_now() + "Success open spreadsheet")
+        write_log(get_now() + " Success open spreadsheet")
     except gspread.exceptions.SpreadsheetNotFound as e2:
         # print str(e2) + "\n No spreadsheet name " + spreadsheet_name + "create spreadsheet"
-        write_log(get_now() + str(e2) + "\n No spreadsheet name " + spreadsheet_name + "create spreadsheet")
+        write_log(get_now() + " " + str(e2) + "\n No spreadsheet name " + spreadsheet_name + "create spreadsheet")
         sh = gc.create(spreadsheet_name)
     sh.share(email, perm_type='user', role='writer')
     return sh
@@ -139,7 +139,7 @@ def write_data(spread_sheet_name, di, sheet_name):
     try:
         ws = sh.worksheet(sheet_name)
         # print ("sheet " + sheet_name + " exist")
-        write_log(get_now() + "sheet " + sheet_name + " exist")
+        write_log(get_now() + " sheet " + sheet_name + " exist")
 
         # Get number of row exist in sheet
         # count = 2
@@ -160,7 +160,7 @@ def write_data(spread_sheet_name, di, sheet_name):
             sh = gs_auth(spread_sheet_name)
             ws = sh.worksheet(sheet_name)
             cot = 2
-            
+
             # Lay so cap hien co trong sheet va vi tri cua chung
             l = {}
             i = 2
@@ -171,7 +171,7 @@ def write_data(spread_sheet_name, di, sheet_name):
                 try:
                     if key in l:
                         # print(key + " in list")
-                        write_log(get_now() + key + " in list")
+                        write_log(get_now() + " " + key + " in list")
                         if di[sheet_name]["data"]["pair"][key] != "0":
                             ws.update_cell(count, l[key], value["last_price"])
                             ws.update_cell(count, l[key]+1, value["volume"])
@@ -180,13 +180,13 @@ def write_data(spread_sheet_name, di, sheet_name):
                             # print("lenghth: " + str(le))
                         else:
                             print(di[sheet_name]["data"]["pair"][key] + " = 0 , khong ghi")
-                            write_log(get_now() + di[sheet_name]["data"]["pair"][key] + " = 0 , khong ghi")
+                            write_log(get_now() + " " + di[sheet_name]["data"]["pair"][key] + " = 0 , khong ghi")
                     else:
                         # print(key + " not in list")
-                        write_log(get_now() + key + " NOT in list")
+                        write_log(get_now() + " " + key + " NOT in list")
                         ws.add_cols(2)
                         new_cot = ws.col_count - 1
-                        write_log(get_now() + "them cot thu " + str(new_cot))
+                        write_log(get_now() + " them cot thu " + str(new_cot))
                         # Write new header for new pair
                         ws.update_cell(1, new_cot, key)
                         ws.update_cell(2, new_cot, "Price")
@@ -200,16 +200,16 @@ def write_data(spread_sheet_name, di, sheet_name):
                     cot+= 2
                 except gspread.exceptions.RequestError as rqe0:
                     # print("Co van de #1: " + str(rqe0))
-                    write_log(get_now() + "Co van de #1: " + str(rqe0))
+                    write_log(get_now() + " Co van de #1: " + str(rqe0))
                     break
     # First record of sheet
     except gspread.exceptions.WorksheetNotFound :
 
         # print("sheet " + sheet_name + " not exist")
-        write_log(get_now() + "sheet " + sheet_name + " not exist")
+        write_log(get_now() + " sheet " + sheet_name + " not exist")
         ws = sh.add_worksheet(sheet_name, 250, di[sheet_name]["column"])
         # print "created sheet " + sheet_name
-        write_log(get_now() + "created sheet " + sheet_name)
+        write_log(get_now() + " created sheet " + sheet_name)
 
         ws.update_cell(2, 1, "Date")
         ws.update_cell(3, 1, di[sheet_name]["data"]["time"])
@@ -220,13 +220,13 @@ def write_data(spread_sheet_name, di, sheet_name):
             sh = gs_auth(spread_sheet_name)
             ws = sh.worksheet(sheet_name)
             # print("auth trong except ko co sheet")
-            write_log(get_now() + "auth trong except ko co sheet")
+            write_log(get_now() + " auth trong except ko co sheet")
             # Write data of the first record
             for key, value in di[sheet_name]["data"]["pair"].iteritems():
                 try:
                     if di[sheet_name]["data"]["pair"][key] != "0":
                         # print("ghi data moi vao sheet moi tao: " + key)
-                        write_log(get_now() + "ghi data moi vao sheet moi tao: " + key)
+                        write_log(get_now() + " ghi data moi vao sheet moi tao: " + key)
                         ws.update_cell(1, cot, key)
                         ws.update_cell(2, cot, "Price")
                         ws.update_cell(2, cot+1, "Volume")
@@ -234,10 +234,10 @@ def write_data(spread_sheet_name, di, sheet_name):
                         # Write the first record
                         ws.update_cell(3, cot, value["last_price"])
                         ws.update_cell(3, cot+1, value["volume"])
-                        write_log(get_now() + "-Wrote pair:" + key)
+                        write_log(get_now() + " Wrote pair:" + key)
 
                         di[sheet_name]["data"]["pair"][key] = "0"
-                        write_log(get_now() + "Da set gia tri key bang 0")
+                        write_log(get_now() + " Da set gia tri key bang 0")
                         cot = cot + 2
                         le = le -1
                         # print("lenghth: " + str(le))
@@ -245,11 +245,11 @@ def write_data(spread_sheet_name, di, sheet_name):
                         pass
                 except gspread.exceptions.RequestError as rqe:
                     # print(str(rqe) + " khong ghi duoc")
-                    write_log(get_now() + str(rqe) + " khong ghi duoc")
+                    write_log(get_now() + " " + str(rqe) + " khong ghi duoc")
                     break
 start_time = datetime.datetime.now()
 
-write_log(get_now() + "Bat dau phien lam viec----------------------------------------------------")
+write_log(get_now() + " Bat dau phien lam viec----------------------------------------------------")
 binance = get_binance()
 bittrex = get_bittrex()
 
@@ -266,6 +266,6 @@ write_data("Coin data", bt, bittrex_sheet_name)
 write_data("Coin data", bn, binance_sheet_name)
 end_time = datetime.datetime.now()
 print("Thoi gian chay:"+ str(end_time - start_time))
-write_log(get_now() + "Thoi gian chay:"+ str(end_time - start_time))
+write_log(get_now() + " Thoi gian chay:"+ str(end_time - start_time))
 
 write_log(get_now() + "Ket thuc phien lam viec----------------------------------------------------")
