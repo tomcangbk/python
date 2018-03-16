@@ -40,7 +40,7 @@ def get_bittrex():
     write_log(get_now() + "-Start get bittrex data")
     # Get pair
     bittrex = {}
-    bittrex["time"] = get_time()
+    bittrex["time"] = str(datetime.datetime.now()+ datetime.timedelta(hours=7))[:19]
     url1 = "https://bittrex.com/api/v1.1/public/getmarkets"
     resp = requests.get(url=url1)
     data = json.loads(resp.text)
@@ -76,7 +76,7 @@ def get_bittrex():
 def get_binance():
     write_log(get_now() + "-Start get binance data")
     binance         = {}
-    binance["time"] = get_time()
+    binance["time"] = str(datetime.datetime.now()+ datetime.timedelta(hours=7))[:19]
     binance["pair"] = {}
     #sub_data2      = {}
     url             = "https://www.binance.com/api/v1/ticker/24hr"
@@ -111,7 +111,7 @@ def gs_auth(spreadsheet_name):
     while(1):
         try:
             gc = gspread.authorize(credentials)
-            write_log(get_now() + Auth success)
+            write_log(get_now() + "Auth success")
             print("Auth success...")
             break
         except gspread.exceptions.AuthenticationError or gspread.exceptions.RequestError:
@@ -153,7 +153,7 @@ def write_data(spread_sheet_name, di, sheet_name):
                 # print count
                 break
         # Write current date
-        ws.update_cell(count, 1, str(datetime.datetime.now()+ datetime.timedelta(hours=7))[:19])
+        ws.update_cell(count, 1, di[sheet_name]["data"]["time"])
         # Append data to exist sheet
         le = len(di[sheet_name]["data"]["pair"])
         while(le > 0):
@@ -206,7 +206,7 @@ def write_data(spread_sheet_name, di, sheet_name):
         write_log(get_now() + "created sheet " + sheet_name)
 
         ws.update_cell(2, 1, "Date")
-        ws.update_cell(3, 1, str(datetime.datetime.now())[:19])+ datetime.timedelta(hours=7)
+        ws.update_cell(3, 1, di[sheet_name]["data"]["time"])
 
         cot = 2
         le = len(di[sheet_name]["data"]["pair"])
@@ -220,7 +220,7 @@ def write_data(spread_sheet_name, di, sheet_name):
                 try:
                     if di[sheet_name]["data"]["pair"][key] != "0":
                         # print("ghi data moi vao sheet moi tao: " + key)
-                        write_log(get_now() + "ghi data moi vao sheet moi tao: " + key) 
+                        write_log(get_now() + "ghi data moi vao sheet moi tao: " + key)
                         ws.update_cell(1, cot, key)
                         ws.update_cell(2, cot, "Price")
                         ws.update_cell(2, cot+1, "Volume")
@@ -243,6 +243,7 @@ def write_data(spread_sheet_name, di, sheet_name):
                     break
 start_time = datetime.datetime.now()
 
+write_log(get_now() + "Bat dau phien lam viec----------------------------------------------------")
 binance = get_binance()
 bittrex = get_bittrex()
 
@@ -260,3 +261,5 @@ write_data("Coin data", bn, binance_sheet_name)
 end_time = datetime.datetime.now()
 print("Thoi gian chay:"+ str(end_time - start_time))
 write_log(get_now() + "Thoi gian chay:"+ str(end_time - start_time))
+
+write_logg(get_now() + "Ket thuc phien lam viec----------------------------------------------------")
