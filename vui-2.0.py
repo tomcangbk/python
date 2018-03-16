@@ -268,4 +268,4 @@ end_time = datetime.datetime.now()
 print("Thoi gian chay:"+ str(end_time - start_time))
 write_log(get_now() + "Thoi gian chay:"+ str(end_time - start_time))
 
-write_logg(get_now() + "Ket thuc phien lam viec----------------------------------------------------")
+write_log(get_now() + "Ket thuc phien lam viec----------------------------------------------------")
