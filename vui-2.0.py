@@ -160,15 +160,21 @@ def write_data(spread_sheet_name, di, sheet_name):
             sh = gs_auth(spread_sheet_name)
             ws = sh.worksheet(sheet_name)
             cot = 2
+            
+            # Lay so cap hien co trong sheet va vi tri cua chung
+            l = {}
+            i = 2
+            while(i < ws.col_count):
+                l[ws.cell(1, i).value] = i
+                i +=2
             for key, value in di[sheet_name]["data"]["pair"].iteritems():
                 try:
-                    cap = ws.cell(1, cot).value
-                    if cap in di[sheet_name]["data"]["pair"]:
-                        # print(cap + " in list")
-                        write_log(get_now() + cap + " in list")
+                    if key in l:
+                        # print(key + " in list")
+                        write_log(get_now() + key + " in list")
                         if di[sheet_name]["data"]["pair"][key] != "0":
-                            ws.update_cell(count, cot, value["last_price"])
-                            ws.update_cell(count, cot+1, value["volume"])
+                            ws.update_cell(count, l[key], value["last_price"])
+                            ws.update_cell(count, l[key]+1, value["volume"])
                             di[sheet_name]["data"]["pair"][key] = "0"
                             le = le - 1
                             # print("lenghth: " + str(le))
@@ -176,8 +182,8 @@ def write_data(spread_sheet_name, di, sheet_name):
                             print(di[sheet_name]["data"]["pair"][key] + " = 0 , khong ghi")
                             write_log(get_now() + di[sheet_name]["data"]["pair"][key] + " = 0 , khong ghi")
                     else:
-                        # print(cap + " not in list")
-                        write_log(get_now() + cap + " NOT in list")
+                        # print(key + " not in list")
+                        write_log(get_now() + key + " NOT in list")
                         ws.add_cols(2)
                         new_cot = ws.col_count - 1
                         write_log(get_now() + "them cot thu " + str(new_cot))
